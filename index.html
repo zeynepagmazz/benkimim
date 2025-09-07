@@ -14,13 +14,14 @@
       align-items: center;
       color: white;
       background: linear-gradient(135deg, #ff4e50, #1fddff);
-      background-image: url("https://www.transparenttextures.com/patterns/stardust.png");
+      background-image: url("https://www.transparenttextures.com/patterns/stardust.png"),
+                        url("https://www.transparenttextures.com/patterns/az-subtle.png");
     }
     header {
-      padding: 15px;
-      font-size: 5vw; /* mobil uyumlu */
+      padding: 20px;
+      font-size: clamp(20px, 3vw, 32px);
       font-weight: bold;
-      background: rgba(0,0,0,0.4);
+      background: rgba(0,0,0,0.5);
       width: 100%;
       text-align: center;
       box-shadow: 0 4px 15px rgba(0,0,0,0.3);
@@ -31,39 +32,42 @@
       grid-template-columns: 1fr;
       gap: 20px;
       width: 95%;
-      max-width: 500px;
+      max-width: 1000px;
       margin: 20px auto;
     }
     @media (min-width: 768px) {
       .container {
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        max-width: 1200px;
+        grid-template-columns: repeat(3, 1fr);
       }
     }
     .card {
-      background: rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.1);
       border-radius: 20px;
       padding: 20px;
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(12px);
       text-align: center;
       box-shadow: 0 10px 25px rgba(0,0,0,0.4);
       transition: transform 0.3s, box-shadow 0.3s;
     }
     .card:hover {
       transform: translateY(-5px) scale(1.02);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.6);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.6);
     }
     h2 {
-      font-size: 6vw;
+      font-size: clamp(18px, 2.5vw, 26px);
+      margin-bottom: 10px;
+    }
+    p {
+      font-size: clamp(14px, 2vw, 18px);
     }
     button {
-      margin-top: 15px;
-      padding: 15px 25px;
+      margin-top: 10px;
+      padding: 12px 20px;
       border: none;
       border-radius: 12px;
       background: #ff4e50;
       color: white;
-      font-size: 5vw;
+      font-size: clamp(14px, 2vw, 18px);
       font-weight: bold;
       cursor: pointer;
       transition: all 0.3s;
@@ -76,10 +80,10 @@
     .game-area {
       margin-top: 15px;
       padding: 15px;
-      background: rgba(0,0,0,0.3);
+      background: rgba(0,0,0,0.4);
       border-radius: 15px;
-      min-height: 100px;
-      font-size: 4.5vw;
+      min-height: 120px;
+      font-size: clamp(14px, 2vw, 18px);
     }
   </style>
 </head>
@@ -103,7 +107,7 @@
 
     <div class="card">
       <h2>🎵 Beyi Devam Ettir</h2>
-      <p>Çalan müziği devam ettirebilir misin?</p>
+      <p>Çalan müziği tahmin edebilir misin?</p>
       <button onclick="startMusic()">Oyna</button>
       <div id="musicGame" class="game-area"></div>
     </div>
@@ -138,13 +142,13 @@
       { name: "Kulaklık", hint: "Müzik dinlemeye yarar" }
     ];
 
-    // --- Beyi Devam Ettir ---
+    // --- Beyi Devam Ettir (gerçek isimlerle) ---
     const musics = [
-      { title: "Türkçe Müzik 1", hint: "Türk halk müziği melodisi", file: "https://cdn.pixabay.com/audio/2022/03/15/audio_9b98a6f1c3.mp3" },
-      { title: "Türkçe Müzik 2", hint: "Türk enstrümantal parça", file: "https://cdn.pixabay.com/audio/2023/03/23/audio_c7f74c5e7c.mp3" },
-      { title: "Türkçe Müzik 3", hint: "Ney ile çalınmış mistik bir parça", file: "https://cdn.pixabay.com/audio/2022/03/29/audio_71f37aeb0b.mp3" },
-      { title: "Türkçe Müzik 4", hint: "Ritmik darbuka sesi içeriyor", file: "https://cdn.pixabay.com/audio/2023/01/02/audio_d68c13db1e.mp3" },
-      { title: "Türkçe Müzik 5", hint: "Hareketli Türkçe pop ezgisi", file: "https://cdn.pixabay.com/audio/2022/11/02/audio_1c9f0e8b72.mp3" }
+      { title: "Ankara Havası", hint: "Hareketli oyun havası", file: "https://cdn.pixabay.com/audio/2023/03/23/audio_c7f74c5e7c.mp3" },
+      { title: "Türkçe Pop Akustik", hint: "Pop akustik tınılar", file: "https://cdn.pixabay.com/audio/2022/07/04/audio_1b7c6fa0d7.mp3" },
+      { title: "Ney Ezgisi", hint: "Mistik ney melodisi", file: "https://cdn.pixabay.com/audio/2022/03/29/audio_71f37aeb0b.mp3" },
+      { title: "Darbuka Ritimleri", hint: "Ritmik darbuka ezgisi", file: "https://cdn.pixabay.com/audio/2023/01/02/audio_d68c13db1e.mp3" },
+      { title: "Anadolu Rock", hint: "Türk rock esintileri", file: "https://cdn.pixabay.com/audio/2022/10/15/audio_4a3ed4d8b9.mp3" }
     ];
 
     // --- Fonksiyonlar ---
@@ -153,7 +157,7 @@
       const random = characters[Math.floor(Math.random() * characters.length)];
       gameDiv.innerHTML = `
         <p><b>İpucu:</b> ${random.hint}</p>
-        <button onclick="alert('Cevap: ${random.name}')">Cevabı Göster</button>
+        <button onclick="document.getElementById('benKimimGame').innerHTML += '<p><b>Cevap:</b> ${random.name}</p>'">Cevabı Göster</button>
         <button onclick="startBenKimim()">Yeni Kişi</button>
       `;
     }
@@ -163,7 +167,7 @@
       const random = objects[Math.floor(Math.random() * objects.length)];
       gameDiv.innerHTML = `
         <p><b>İpucu:</b> ${random.hint}</p>
-        <button onclick="alert('Cevap: ${random.name}')">Cevabı Göster</button>
+        <button onclick="document.getElementById('benNeyimGame').innerHTML += '<p><b>Cevap:</b> ${random.name}</p>'">Cevabı Göster</button>
         <button onclick="startBenNeyim()">Yeni Nesne</button>
       `;
     }
@@ -175,7 +179,7 @@
       gameDiv.innerHTML = `
         <p><b>İpucu:</b> ${random.hint}</p>
         <button onclick="playMusic('${random.file}')">Çal</button>
-        <button onclick="alert('Cevap: ${random.title}')">Cevabı Göster</button>
+        <button onclick="document.getElementById('musicGame').innerHTML += '<p><b>Cevap:</b> ${random.title}</p>'">Cevabı Göster</button>
         <button onclick="startMusic()">Yeni Müzik</button>
       `;
     }
@@ -183,7 +187,6 @@
     function playMusic(file) {
       if (currentAudio) currentAudio.pause();
       currentAudio = new Audio(file);
-      currentAudio.currentTime = 0;
       currentAudio.play();
       setTimeout(() => currentAudio.pause(), 10000); // 10 sn çalsın
     }
