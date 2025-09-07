@@ -13,9 +13,23 @@
       flex-direction: column;
       align-items: center;
       color: #fff;
+      overflow-x: hidden;
       background: linear-gradient(120deg, #1e3c72, #2a5298);
-      background-attachment: fixed;
     }
+
+    /* 🎨 Arka plan animasyonu (soru işaretleri) */
+    .background span {
+      position: absolute;
+      font-size: 30px;
+      color: rgba(255,255,255,0.15);
+      animation: float 10s linear infinite;
+    }
+    @keyframes float {
+      0% { transform: translateY(100vh) scale(0); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+    }
+
     header {
       padding: 20px;
       font-size: clamp(20px, 3vw, 34px);
@@ -24,7 +38,8 @@
       color: #ffeb3b;
       width: 100%;
       text-align: center;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+      z-index: 10;
+      position: relative;
     }
     .container {
       display: grid;
@@ -33,6 +48,8 @@
       width: 95%;
       max-width: 1000px;
       margin: 20px auto;
+      z-index: 10;
+      position: relative;
     }
     @media (min-width: 768px) {
       .container {
@@ -64,9 +81,6 @@
       border-radius: 12px;
       margin-bottom: 10px;
     }
-    p {
-      font-size: clamp(14px, 2vw, 18px);
-    }
     button {
       margin-top: 10px;
       padding: 12px 20px;
@@ -90,16 +104,17 @@
       background: rgba(0,0,0,0.5);
       border-radius: 15px;
       min-height: 120px;
-      font-size: clamp(14px, 2vw, 18px);
     }
   </style>
 </head>
 <body>
+  <!-- ❓ Animasyonlu arka plan -->
+  <div class="background"></div>
+
   <header>🎮 Ben Kimim – Eğlenceli Tahmin Oyunu 🎉</header>
 
   <div class="container">
     <div class="card">
-      <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=500&q=60" alt="Ben Kimim">
       <h2>🎭 Ben Kimim</h2>
       <p>Ünlüleri, tarihî kişileri ve sporcuları tahmin et! 🧠</p>
       <button onclick="startBenKimim()">Oyna</button>
@@ -107,7 +122,6 @@
     </div>
 
     <div class="card">
-      <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=500&q=60" alt="Ben Neyim">
       <h2>🎲 Ben Neyim</h2>
       <p>İpuçlarına bak, nesneyi tahmin et! 🔍</p>
       <button onclick="startBenNeyim()">Oyna</button>
@@ -115,7 +129,6 @@
     </div>
 
     <div class="card">
-      <img src="https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2?auto=format&fit=crop&w=500&q=60" alt="Müzik">
       <h2>🎵 Beyi Devam Ettir</h2>
       <p>Çalan müziği tahmin edebilir misin? 🎶</p>
       <button onclick="startMusic()">Oyna</button>
@@ -124,52 +137,40 @@
   </div>
 
   <script>
-    // --- Ben Kimim ---
+    // 🎭 Ben Kimim
     const characters = [
-      { name: "Mustafa Kemal Atatürk", hint: "Türkiye Cumhuriyetinin kurucusu" },
-      { name: "Fatih Sultan Mehmet", hint: "İstanbul'u fetheden Osmanlı padişahı" },
       { name: "Sezen Aksu", hint: "Minik Serçe lakaplı şarkıcı" },
       { name: "Tarkan", hint: "Megastar lakaplı Türk pop şarkıcısı" },
-      { name: "Barış Manço", hint: "Adam Olacak Çocuk programının sunucusu" },
-      { name: "Ajda Pekkan", hint: "Süperstar lakaplı Türk şarkıcı" },
-      { name: "Cem Yılmaz", hint: "Ünlü Türk komedyen" },
-      { name: "Haluk Bilginer", hint: "Emmy ödüllü Türk oyuncu" },
-      { name: "Albert Einstein", hint: "Görelilik teorisiyle ünlü bilim insanı" },
-      { name: "Cristiano Ronaldo", hint: "Portekizli futbolcu" }
+      { name: "Bengü", hint: "Türk pop şarkıcısı" },
+      { name: "Kenan Doğulu", hint: "Türk pop müziğinin en sevilen isimlerinden" }
     ];
 
-    // --- Ben Neyim ---
+    // 🎲 Ben Neyim
     const objects = [
-      { name: "Telefon", hint: "İletişim için kullanılır, cebinde taşınır" },
-      { name: "Bilgisayar", hint: "İnternete girmeni sağlar" },
-      { name: "Kitap", hint: "Bilgi veya hikaye içeren sayfalar" },
-      { name: "Kalem", hint: "Yazı yazmak için kullanılır" },
-      { name: "Koltuk", hint: "Oturmak için kullanılan mobilya" },
-      { name: "Araba", hint: "Motorlu taşıt" },
-      { name: "Buzdolabı", hint: "Yiyecekleri soğutur" },
-      { name: "Anahtar", hint: "Kapıyı açar" },
-      { name: "Masa", hint: "Üzerinde yemek yenir veya ders çalışılır" },
-      { name: "Kulaklık", hint: "Müzik dinlemeye yarar" }
+      { name: "Telefon", hint: "İletişim için kullanılır" },
+      { name: "Kitap", hint: "Bilgi ve hikaye içerir" },
+      { name: "Kalem", hint: "Yazı yazmaya yarar" },
+      { name: "Araba", hint: "Motorlu taşıt" }
     ];
 
-    // --- Beyi Devam Ettir (test edilmiş Türkçe telifsiz mp3) ---
+    // 🎵 Beyi Devam Ettir (YouTube linkleri iframe ile)
     const musics = [
-      { title: "Ankara Havası", hint: "Hareketli oyun havası", file: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_9b98a6f1c3.mp3?filename=ankara-havasi.mp3" },
-      { title: "Türkçe Pop Akustik", hint: "Akustik pop ezgisi", file: "https://cdn.pixabay.com/download/audio/2022/07/04/audio_1b7c6fa0d7.mp3?filename=turkce-pop.mp3" },
-      { title: "Ney Ezgisi", hint: "Mistik ney melodisi", file: "https://cdn.pixabay.com/download/audio/2022/03/29/audio_71f37aeb0b.mp3?filename=ney.mp3" },
-      { title: "Darbuka Ritimleri", hint: "Ritmik darbuka sesi", file: "https://cdn.pixabay.com/download/audio/2023/01/02/audio_d68c13db1e.mp3?filename=darbuka.mp3" },
-      { title: "Anadolu Rock", hint: "Türk rock esintileri", file: "https://cdn.pixabay.com/download/audio/2022/10/15/audio_4a3ed4d8b9.mp3?filename=anadolu-rock.mp3" }
+      { title: "Sezen Aksu – Seni Yerler", hint: "Türkçe pop şarkısı", file: "https://www.youtube.com/embed/IVE00F-2ZCw" },
+      { title: "Bengü – Saygımdan", hint: "Türkçe pop ballad", file: "https://www.youtube.com/embed/4goQBlcdVUk" },
+      { title: "Kenan Doğulu – Ara Beni Lütfen", hint: "Hareketli Türkçe pop", file: "https://www.youtube.com/embed/LZnXSIQdvhs" }
     ];
 
-    // --- Fonksiyonlar ---
+    // Fonksiyonlar
     function startBenKimim() {
       const gameDiv = document.getElementById("benKimimGame");
       const random = characters[Math.floor(Math.random() * characters.length)];
       gameDiv.innerHTML = `
         <p>🧩 <b>İpucu:</b> ${random.hint}</p>
-        <button onclick="document.getElementById('benKimimGame').innerHTML += '<p>✅ <b>Cevap:</b> ${random.name}</p>'">Cevabı Göster</button>
+        <p id="benKimimAnswer"></p>
+        <button onclick="document.getElementById('benKimimAnswer').innerText='✅ Cevap: ${random.name}'">Cevabı Göster</button>
         <button onclick="startBenKimim()">Yeni Kişi</button>
       `;
+      spawnQuestions(); // arka plan animasyonu başlat
     }
 
     function startBenNeyim() {
@@ -177,28 +178,39 @@
       const random = objects[Math.floor(Math.random() * objects.length)];
       gameDiv.innerHTML = `
         <p>🔍 <b>İpucu:</b> ${random.hint}</p>
-        <button onclick="document.getElementById('benNeyimGame').innerHTML += '<p>✅ <b>Cevap:</b> ${random.name}</p>'">Cevabı Göster</button>
+        <p id="benNeyimAnswer"></p>
+        <button onclick="document.getElementById('benNeyimAnswer').innerText='✅ Cevap: ${random.name}'">Cevabı Göster</button>
         <button onclick="startBenNeyim()">Yeni Nesne</button>
       `;
+      spawnQuestions();
     }
 
-    let currentAudio;
     function startMusic() {
       const gameDiv = document.getElementById("musicGame");
       const random = musics[Math.floor(Math.random() * musics.length)];
       gameDiv.innerHTML = `
         <p>🎶 <b>İpucu:</b> ${random.hint}</p>
-        <button onclick="playMusic('${random.file}')">▶️ Çal</button>
-        <button onclick="document.getElementById('musicGame').innerHTML += '<p>✅ <b>Cevap:</b> ${random.title}</p>'">Cevabı Göster</button>
+        <div style="margin:10px 0">
+          <iframe width="100%" height="200" src="${random.file}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+        <p id="musicAnswer"></p>
+        <button onclick="document.getElementById('musicAnswer').innerText='✅ Cevap: ${random.title}'">Cevabı Göster</button>
         <button onclick="startMusic()">Yeni Müzik</button>
       `;
+      spawnQuestions();
     }
 
-    function playMusic(file) {
-      if (currentAudio) currentAudio.pause();
-      currentAudio = new Audio(file);
-      currentAudio.play();
-      setTimeout(() => currentAudio.pause(), 10000); // 10 sn çalsın
+    // ❓ Arka planda hareketli soru işaretleri üret
+    function spawnQuestions() {
+      const bg = document.querySelector('.background');
+      for (let i = 0; i < 10; i++) {
+        const span = document.createElement('span');
+        span.innerText = "❓";
+        span.style.left = Math.random() * 100 + "vw";
+        span.style.animationDuration = (5 + Math.random() * 5) + "s";
+        bg.appendChild(span);
+        setTimeout(() => span.remove(), 10000);
+      }
     }
   </script>
 </body>
