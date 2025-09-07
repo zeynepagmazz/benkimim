@@ -13,43 +13,27 @@
       flex-direction: column;
       align-items: center;
       color: #fff;
-      overflow-x: hidden;
-      background: linear-gradient(120deg, #1e3c72, #2a5298);
+      background: linear-gradient(135deg, #232526, #414345); /* koyu ve modern */
+      background-attachment: fixed;
     }
-
-    /* 🎨 Arka plan animasyonu (soru işaretleri) */
-    .background span {
-      position: absolute;
-      font-size: 30px;
-      color: rgba(255,255,255,0.15);
-      animation: float 10s linear infinite;
-    }
-    @keyframes float {
-      0% { transform: translateY(100vh) scale(0); opacity: 0; }
-      50% { opacity: 1; }
-      100% { transform: translateY(-10vh) scale(1); opacity: 0; }
-    }
-
     header {
       padding: 20px;
       font-size: clamp(20px, 3vw, 34px);
       font-weight: bold;
-      background: rgba(0,0,0,0.7);
-      color: #ffeb3b;
+      background: rgba(255,255,255,0.1);
+      color: #ffcc00;
       width: 100%;
       text-align: center;
-      z-index: 10;
-      position: relative;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      backdrop-filter: blur(6px);
     }
     .container {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 20px;
+      gap: 25px;
       width: 95%;
-      max-width: 1000px;
-      margin: 20px auto;
-      z-index: 10;
-      position: relative;
+      max-width: 1100px;
+      margin: 30px auto;
     }
     @media (min-width: 768px) {
       .container {
@@ -57,29 +41,32 @@
       }
     }
     .card {
-      background: rgba(255,255,255,0.1);
-      border-radius: 20px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 18px;
       padding: 20px;
       text-align: center;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.6);
       transition: transform 0.3s, box-shadow 0.3s;
-      backdrop-filter: blur(12px);
     }
     .card:hover {
-      transform: translateY(-5px) scale(1.05);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.7);
+      transform: translateY(-6px) scale(1.04);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.8);
     }
     .card h2 {
       font-size: clamp(18px, 2.5vw, 26px);
-      margin-bottom: 10px;
-      color: #ffeb3b;
+      margin-bottom: 12px;
+      color: #ffcc00;
     }
     .card img {
       width: 100%;
-      height: 160px;
+      height: 180px;
       object-fit: cover;
-      border-radius: 12px;
-      margin-bottom: 10px;
+      border-radius: 15px;
+      margin-bottom: 12px;
+    }
+    p {
+      font-size: clamp(14px, 2vw, 18px);
+      margin: 10px 0;
     }
     button {
       margin-top: 10px;
@@ -108,13 +95,11 @@
   </style>
 </head>
 <body>
-  <!-- ❓ Animasyonlu arka plan -->
-  <div class="background"></div>
-
   <header>🎮 Ben Kimim – Eğlenceli Tahmin Oyunu 🎉</header>
 
   <div class="container">
     <div class="card">
+      <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=600&q=80" alt="Ben Kimim">
       <h2>🎭 Ben Kimim</h2>
       <p>Ünlüleri, tarihî kişileri ve sporcuları tahmin et! 🧠</p>
       <button onclick="startBenKimim()">Oyna</button>
@@ -122,6 +107,7 @@
     </div>
 
     <div class="card">
+      <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=600&q=80" alt="Ben Neyim">
       <h2>🎲 Ben Neyim</h2>
       <p>İpuçlarına bak, nesneyi tahmin et! 🔍</p>
       <button onclick="startBenNeyim()">Oyna</button>
@@ -129,6 +115,7 @@
     </div>
 
     <div class="card">
+      <img src="https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2?auto=format&fit=crop&w=600&q=80" alt="Müzik">
       <h2>🎵 Beyi Devam Ettir</h2>
       <p>Çalan müziği tahmin edebilir misin? 🎶</p>
       <button onclick="startMusic()">Oyna</button>
@@ -142,7 +129,7 @@
       { name: "Sezen Aksu", hint: "Minik Serçe lakaplı şarkıcı" },
       { name: "Tarkan", hint: "Megastar lakaplı Türk pop şarkıcısı" },
       { name: "Bengü", hint: "Türk pop şarkıcısı" },
-      { name: "Kenan Doğulu", hint: "Türk pop müziğinin en sevilen isimlerinden" }
+      { name: "Kenan Doğulu", hint: "Türk pop müziğinin sevilen isimlerinden" }
     ];
 
     // 🎲 Ben Neyim
@@ -153,11 +140,11 @@
       { name: "Araba", hint: "Motorlu taşıt" }
     ];
 
-    // 🎵 Beyi Devam Ettir (YouTube linkleri iframe ile)
+    // 🎵 Beyi Devam Ettir (mp3 ile, isim gizli)
     const musics = [
-      { title: "Sezen Aksu – Seni Yerler", hint: "Türkçe pop şarkısı", file: "https://www.youtube.com/embed/IVE00F-2ZCw" },
-      { title: "Bengü – Saygımdan", hint: "Türkçe pop ballad", file: "https://www.youtube.com/embed/4goQBlcdVUk" },
-      { title: "Kenan Doğulu – Ara Beni Lütfen", hint: "Hareketli Türkçe pop", file: "https://www.youtube.com/embed/LZnXSIQdvhs" }
+      { title: "Sezen Aksu – Seni Yerler", hint: "Türkçe pop şarkısı", file: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
+      { title: "Bengü – Saygımdan", hint: "Türkçe pop ballad", file: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
+      { title: "Kenan Doğulu – Ara Beni Lütfen", hint: "Hareketli Türkçe pop", file: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" }
     ];
 
     // Fonksiyonlar
@@ -170,7 +157,6 @@
         <button onclick="document.getElementById('benKimimAnswer').innerText='✅ Cevap: ${random.name}'">Cevabı Göster</button>
         <button onclick="startBenKimim()">Yeni Kişi</button>
       `;
-      spawnQuestions(); // arka plan animasyonu başlat
     }
 
     function startBenNeyim() {
@@ -182,35 +168,26 @@
         <button onclick="document.getElementById('benNeyimAnswer').innerText='✅ Cevap: ${random.name}'">Cevabı Göster</button>
         <button onclick="startBenNeyim()">Yeni Nesne</button>
       `;
-      spawnQuestions();
     }
 
+    let currentAudio;
     function startMusic() {
       const gameDiv = document.getElementById("musicGame");
       const random = musics[Math.floor(Math.random() * musics.length)];
       gameDiv.innerHTML = `
         <p>🎶 <b>İpucu:</b> ${random.hint}</p>
-        <div style="margin:10px 0">
-          <iframe width="100%" height="200" src="${random.file}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-        </div>
         <p id="musicAnswer"></p>
+        <button onclick="playMusic('${random.file}')">▶️ Çal</button>
         <button onclick="document.getElementById('musicAnswer').innerText='✅ Cevap: ${random.title}'">Cevabı Göster</button>
         <button onclick="startMusic()">Yeni Müzik</button>
       `;
-      spawnQuestions();
     }
 
-    // ❓ Arka planda hareketli soru işaretleri üret
-    function spawnQuestions() {
-      const bg = document.querySelector('.background');
-      for (let i = 0; i < 10; i++) {
-        const span = document.createElement('span');
-        span.innerText = "❓";
-        span.style.left = Math.random() * 100 + "vw";
-        span.style.animationDuration = (5 + Math.random() * 5) + "s";
-        bg.appendChild(span);
-        setTimeout(() => span.remove(), 10000);
-      }
+    function playMusic(file) {
+      if (currentAudio) currentAudio.pause();
+      currentAudio = new Audio(file);
+      currentAudio.play();
+      setTimeout(() => currentAudio.pause(), 10000); // 10 sn çalsın
     }
   </script>
 </body>
